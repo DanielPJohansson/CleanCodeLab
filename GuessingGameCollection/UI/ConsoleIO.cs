@@ -1,4 +1,4 @@
-namespace CleanCodeLab.UI;
+namespace GuessingGameCollection.UI;
 
 public class ConsoleIO : IUI
 {

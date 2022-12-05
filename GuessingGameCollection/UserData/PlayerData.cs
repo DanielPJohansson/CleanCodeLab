@@ -1,4 +1,4 @@
-namespace CleanCodeLab.UserData;
+namespace GuessingGameCollection.UserData;
 
 public class PlayerData
 {
@@ -14,12 +14,15 @@ public class PlayerData
         totalGuess = guesses;
     }
 
+
+    //Does more than one thing
     public void Update(int guesses)
     {
         totalGuess += guesses;
         NumberOfGames++;
     }
 
+    //Returns a more specific average than the method name indicates
     public double Average()
     {
         return (double)totalGuess / NumberOfGames;

@@ -1,6 +1,6 @@
-using CleanCodeLab.UserData;
+using GuessingGameCollection.UserData;
 
-namespace CleanCodeLab.Data;
+namespace GuessingGameCollection.Data;
 public class ScoreDAO : IScoreDAO
 {
     public void PostScore(string name, int numberOfGuesses)

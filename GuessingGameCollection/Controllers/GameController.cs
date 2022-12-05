@@ -1,22 +1,20 @@
-using CleanCodeLab.Data;
-using CleanCodeLab.Games;
-using CleanCodeLab.UI;
-using CleanCodeLab.UserData;
+using GuessingGameCollection.Data;
+using GuessingGameCollection.Games;
+using GuessingGameCollection.UI;
+using GuessingGameCollection.UserData;
 
-namespace CleanCodeLab.Controllers;
+namespace GuessingGameCollection.Controllers;
 public class GameController
 {
     private readonly IGame _game;
     private readonly IUI _ui;
+    private readonly IScoreDAO _scoreDAO;
 
-    private ScoreDAO scoreDAO;
-
-    public GameController(IUI ui, IGame game)
+    public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
     {
         _ui = ui;
         _game = game;
-
-        scoreDAO = new();
+        _scoreDAO = scoreDAO;
     }
 
     public void Run()
@@ -27,7 +25,7 @@ public class GameController
 
         while (playOn)
         {
-            string goal = _game.MakeGoal();
+            string goal = _game.GenerateGameGoal();
 
             _ui.OutputString("New game:\n");
             //comment out or remove next line to play real games!
@@ -42,12 +40,12 @@ public class GameController
                 numberOfGuesses++;
                 guess = _ui.GetStringInput();
                 _ui.OutputString(guess + "\n");
-                bbcc = _game.CheckBC(goal, guess);
+                bbcc = _game.GetResultOfGuess(goal, guess);
                 _ui.OutputString(bbcc + "\n");
             }
 
-            scoreDAO.PostScore(name, numberOfGuesses);
-            var highScores = scoreDAO.GetHighScores();
+            _scoreDAO.PostScore(name, numberOfGuesses);
+            var highScores = _scoreDAO.GetHighScores();
             _ui.OutputString("Player   games average");
             foreach (PlayerData player in highScores)
             {

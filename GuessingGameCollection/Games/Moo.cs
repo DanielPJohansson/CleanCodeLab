@@ -1,28 +1,36 @@
-namespace CleanCodeLab.Games;
+namespace GuessingGameCollection.Games;
 
+/// <summary>
+/// Description of game rules
+/// </summary>
 public class Moo : IGame
 {
-    public string MakeGoal()
+    public string GenerateGameGoal()
     {
         Random randomGenerator = new Random();
-        string goal = "";
+        string goal = string.Empty;
+
         for (int i = 0; i < 4; i++)
         {
             int random = randomGenerator.Next(10);
             string randomDigit = "" + random;
+
             while (goal.Contains(randomDigit))
             {
                 random = randomGenerator.Next(10);
                 randomDigit = "" + random;
             }
+
             goal = goal + randomDigit;
         }
+
         return goal;
     }
 
-    public string CheckBC(string goal, string guess)
+    public string GetResultOfGuess(string goal, string guess)
     {
-        int cows = 0, bulls = 0;
+        int correctDigitButWrongPosition = 0, correctDigitAndPosition = 0;
+
         guess += "    ";     // if player entered less than 4 chars
         for (int i = 0; i < 4; i++)
         {
@@ -32,15 +40,15 @@ public class Moo : IGame
                 {
                     if (i == j)
                     {
-                        bulls++;
+                        correctDigitAndPosition++;
                     }
                     else
                     {
-                        cows++;
+                        correctDigitButWrongPosition++;
                     }
                 }
             }
         }
-        return "BBBB".Substring(0, bulls) + "," + "CCCC".Substring(0, cows);
+        return "BBBB".Substring(0, correctDigitAndPosition) + "," + "CCCC".Substring(0, correctDigitButWrongPosition);
     }
 }

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuessingGameCollection", "GuessingGameCollection\GuessingGameCollection.csproj", "{D73F0D47-CED8-499E-9E2D-DFE453591975}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuessingGameCollection.Tests", "GuessingGameCollection.Tests\GuessingGameCollection.Tests.csproj", "{6BC03B89-8C4B-43C2-BE47-EED2E476AB91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D73F0D47-CED8-499E-9E2D-DFE453591975}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73F0D47-CED8-499E-9E2D-DFE453591975}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73F0D47-CED8-499E-9E2D-DFE453591975}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73F0D47-CED8-499E-9E2D-DFE453591975}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BC03B89-8C4B-43C2-BE47-EED2E476AB91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BC03B89-8C4B-43C2-BE47-EED2E476AB91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BC03B89-8C4B-43C2-BE47-EED2E476AB91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BC03B89-8C4B-43C2-BE47-EED2E476AB91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
