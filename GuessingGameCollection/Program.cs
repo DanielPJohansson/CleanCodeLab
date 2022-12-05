@@ -8,7 +8,7 @@ IUI ui = new ConsoleIO();
 IGame game = new Moo();
 IScoreDAO scoreDAO = new ScoreDAO();
 
-GameController controller = new GameController(ui, game, scoreDAO);
-controller.Run();
+GameController gameController = new GameController(ui, game, scoreDAO);
+gameController.Run();
 
 

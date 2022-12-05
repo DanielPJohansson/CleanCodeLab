@@ -7,39 +7,58 @@ namespace GuessingGameCollection.Games;
 /// </summary>
 public class Moo : IGame
 {
-    public string GenerateGameGoal()
+    public string Goal { get; set; } = string.Empty;
+    public string CurrentResult { get; set; } = string.Empty;
+    public bool GuessIsCorrect { get; set; } = false;
+
+    public void GenerateGameGoal()
     {
-        Random randomGenerator = new Random();
-        // StringBuilder stringBuilder = new();
-        string goal = string.Empty;
-
-        for (int i = 0; i < 4; i++)
-        {
-            int random = randomGenerator.Next(10);
-            string randomDigit = "" + random;
-
-            while (goal.Contains(randomDigit))
-            {
-                random = randomGenerator.Next(10);
-                randomDigit = "" + random;
-            }
-
-            goal = goal + randomDigit;
-        }
-
-        return goal;
+        List<int> digits = GetUniqueRandomDigits(4, 9);
+        Goal = BuildStringFromDigits(digits);
     }
 
-    public string GetResultOfGuess(string goal, string guess)
+    private string BuildStringFromDigits(List<int> digits)
     {
-        int numberOfCorrectDigitWrongPosition = 0, numberOfCorrectDigitAndPosition = 0;
-
-        guess += "    ";     // if player entered less than 4 chars
-        for (int i = 0; i < 4; i++)
+        StringBuilder stringBuilder = new();
+        foreach (var digit in digits)
         {
-            for (int j = 0; j < 4; j++)
+            stringBuilder.Append(digit);
+        }
+
+        return stringBuilder.ToString();
+    }
+
+    private List<int> GetUniqueRandomDigits(int numberOfDigits, int maxValue)
+    {
+        List<int> digits = new List<int>();
+
+        Random randomGenerator = new Random();
+
+        for (int i = 0; i < numberOfDigits; i++)
+        {
+            int randomDigit = randomGenerator.Next(maxValue + 1);
+
+            while (digits.Contains(randomDigit))
             {
-                if (goal[i] == guess[j])
+                randomDigit = randomGenerator.Next(maxValue + 1);
+            }
+
+            digits.Add(randomDigit);
+        }
+
+        return digits;
+    }
+
+    public void EvaluateGuess(string guess)
+    {
+        int numberOfCorrectDigitWrongPosition = 0;
+        int numberOfCorrectDigitAndPosition = 0;
+
+        for (int i = 0; i < Goal.Length; i++)
+        {
+            for (int j = 0; j < Goal.Length && j < guess.Length; j++)
+            {
+                if (Goal[i] == guess[j])
                 {
                     if (i == j)
                     {
@@ -52,6 +71,17 @@ public class Moo : IGame
                 }
             }
         }
-        return "BBBB".Substring(0, numberOfCorrectDigitAndPosition) + "," + "CCCC".Substring(0, numberOfCorrectDigitWrongPosition);
+
+        if (numberOfCorrectDigitAndPosition == Goal.Length)
+        {
+            GuessIsCorrect = true;
+        }
+
+        UpdateCurrentResult(numberOfCorrectDigitWrongPosition, numberOfCorrectDigitAndPosition);
+    }
+
+    private void UpdateCurrentResult(int numberOfCorrectDigitWrongPosition, int numberOfCorrectDigitAndPosition)
+    {
+        CurrentResult = "BBBB".Substring(0, numberOfCorrectDigitAndPosition) + "," + "CCCC".Substring(0, numberOfCorrectDigitWrongPosition);
     }
 }

@@ -16,7 +16,9 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsNumberBetween0And9999()
     {
-        var result = _game.GenerateGameGoal();
+        _game.GenerateGameGoal();
+
+        string result = _game.Goal;
 
         int parsedResult;
 
@@ -26,7 +28,8 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsStringOfLength4()
     {
-        var result = _game.GenerateGameGoal();
+        _game.GenerateGameGoal();
+        string result = _game.Goal;
 
         Assert.AreEqual(result.Length, 4);
     }
@@ -39,9 +42,13 @@ public class MooGameLogicTest
     [DataRow("1234", "1234", "BBBB,")]
     [DataRow("1234", "", ",")]
     [DataRow("1234", "987556", ",")]
-    public void GetResultOfGuess_ReturnsCorrectResult(string goalInput, string guessInput, string expected)
+    public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
-        var result = _game.GetResultOfGuess(goalInput, guessInput);
+        _game.Goal = goal;
+
+        _game.EvaluateGuess(guessInput);
+
+        string result = _game.CurrentResult;
 
         Assert.AreEqual(expected, result);
     }
