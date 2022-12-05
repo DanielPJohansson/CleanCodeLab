@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace GuessingGameCollection.Games;
 
 /// <summary>
@@ -8,6 +10,7 @@ public class Moo : IGame
     public string GenerateGameGoal()
     {
         Random randomGenerator = new Random();
+        // StringBuilder stringBuilder = new();
         string goal = string.Empty;
 
         for (int i = 0; i < 4; i++)
@@ -29,7 +32,7 @@ public class Moo : IGame
 
     public string GetResultOfGuess(string goal, string guess)
     {
-        int correctDigitButWrongPosition = 0, correctDigitAndPosition = 0;
+        int numberOfCorrectDigitWrongPosition = 0, numberOfCorrectDigitAndPosition = 0;
 
         guess += "    ";     // if player entered less than 4 chars
         for (int i = 0; i < 4; i++)
@@ -40,15 +43,15 @@ public class Moo : IGame
                 {
                     if (i == j)
                     {
-                        correctDigitAndPosition++;
+                        numberOfCorrectDigitAndPosition++;
                     }
                     else
                     {
-                        correctDigitButWrongPosition++;
+                        numberOfCorrectDigitWrongPosition++;
                     }
                 }
             }
         }
-        return "BBBB".Substring(0, correctDigitAndPosition) + "," + "CCCC".Substring(0, correctDigitButWrongPosition);
+        return "BBBB".Substring(0, numberOfCorrectDigitAndPosition) + "," + "CCCC".Substring(0, numberOfCorrectDigitWrongPosition);
     }
 }

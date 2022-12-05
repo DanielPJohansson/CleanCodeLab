@@ -33,7 +33,7 @@ public class ScoreDAO : IScoreDAO
 
 
         }
-        results.Sort((p1, p2) => p1.Average().CompareTo(p2.Average()));
+        results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
         input.Close();
 
         return results;

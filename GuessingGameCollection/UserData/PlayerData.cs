@@ -23,7 +23,7 @@ public class PlayerData
     }
 
     //Returns a more specific average than the method name indicates
-    public double Average()
+    public double GetAverageScore()
     {
         return (double)totalGuess / NumberOfGames;
     }

@@ -49,7 +49,7 @@ public class GameController
             _ui.OutputString("Player   games average");
             foreach (PlayerData player in highScores)
             {
-                _ui.OutputString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.Name, player.NumberOfGames, player.Average()));
+                _ui.OutputString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.Name, player.NumberOfGames, player.GetAverageScore()));
             }
             _ui.OutputString("Correct, it took " + numberOfGuesses + " guesses\nContinue?");
 
