@@ -21,9 +21,9 @@ public class GameController
 
     public void Run()
     {
+        GetNameFromUser();
+
         bool continuePlaying = true;
-        _ui.OutputString("Enter your user name:\n");
-        currentPlayer = _ui.GetStringInput();
 
         while (continuePlaying)
         {
@@ -35,6 +35,13 @@ public class GameController
             continuePlaying = QueryContinuePlaying();
         }
     }
+
+    private void GetNameFromUser()
+    {
+        _ui.OutputString("Enter your user name:\n");
+        currentPlayer = _ui.GetStringInput();
+    }
+
     private void ResetNumberOfGuesses()
     {
         numberOfGuessesInCurrentGame = 0;
@@ -46,7 +53,7 @@ public class GameController
 
         _ui.OutputString("New game:\n");
         //comment out or remove next line to play real games!
-        _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
+        // _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
 
         string guess = string.Empty;
         guess = _ui.GetStringInput();
