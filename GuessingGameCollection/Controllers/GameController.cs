@@ -10,7 +10,7 @@ public class GameController
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
     private string currentPlayer = string.Empty;
-    private int numberOfGuessesInCurrentGame;
+    private int numberOfGuessesInCurrentGame = 0;
 
     public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
     {
@@ -21,38 +21,20 @@ public class GameController
 
     public void Run()
     {
-        bool playOn = true;
+        bool continuePlaying = true;
         _ui.OutputString("Enter your user name:\n");
         currentPlayer = _ui.GetStringInput();
 
-        while (playOn)
+        while (continuePlaying)
         {
             ResetNumberOfGuesses();
             RunNewGame();
             PrintHighScores();
             PrintResultForCurrentGame();
 
-            playOn = NewMethod(playOn);
+            continuePlaying = QueryContinuePlaying();
         }
     }
-
-    private bool NewMethod(bool playOn)
-    {
-        _ui.OutputString("Continue?");
-        string answer = _ui.GetStringInput();
-        if (answer != null && answer != "" && answer.Substring(0, 1) == "n")
-        {
-            playOn = false;
-        }
-
-        return playOn;
-    }
-
-    private void PrintResultForCurrentGame()
-    {
-        _ui.OutputString("Correct, it took " + numberOfGuessesInCurrentGame + " guesses");
-    }
-
     private void ResetNumberOfGuesses()
     {
         numberOfGuessesInCurrentGame = 0;
@@ -66,19 +48,23 @@ public class GameController
         //comment out or remove next line to play real games!
         _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
 
-        int numberOfGuesses = 0;
         string guess = string.Empty;
+        guess = _ui.GetStringInput();
+        _game.EvaluateGuess(guess);
+        _ui.OutputString(_game.CurrentResult + "\n");
+        numberOfGuessesInCurrentGame++;
 
         while (_game.GuessIsCorrect is false)
         {
-            numberOfGuessesInCurrentGame++;
             guess = _ui.GetStringInput();
             _ui.OutputString(guess + "\n");
+
             _game.EvaluateGuess(guess);
             _ui.OutputString(_game.CurrentResult + "\n");
+            numberOfGuessesInCurrentGame++;
         }
 
-        _scoreDAO.PostScore(currentPlayer, numberOfGuesses);
+        _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame);
     }
 
     private void PrintHighScores()
@@ -88,7 +74,26 @@ public class GameController
 
         foreach (PlayerData player in highScores)
         {
-            _ui.OutputString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.Name, player.NumberOfGames, player.GetAverageScore()));
+            _ui.OutputString(player.ToString());
         }
     }
+    private void PrintResultForCurrentGame()
+    {
+        _ui.OutputString("Correct, it took " + numberOfGuessesInCurrentGame + " guesses");
+    }
+
+    private bool QueryContinuePlaying()
+    {
+        _ui.OutputString("Continue?");
+        string answer = _ui.GetStringInput();
+
+        if (!string.IsNullOrEmpty(answer) && answer.StartsWith('n'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
 }

@@ -34,6 +34,10 @@ public class PlayerData
         return Name.Equals(((PlayerData)p).Name);
     }
 
+    public override string ToString()
+    {
+        return string.Format("{0,-9}{1,5:D}{2,9:F2}", Name, NumberOfGames, GetAverageScore());
+    }
 
     public override int GetHashCode()
     {
