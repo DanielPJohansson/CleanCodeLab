@@ -6,11 +6,13 @@ using GuessingGameCollection.UserData;
 namespace GuessingGameCollection.Controllers;
 public class GameController
 {
+    public bool IsPractice { get; set; } = false;
     private readonly IGame _game;
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
     private string currentPlayer = string.Empty;
     private int numberOfGuessesInCurrentGame = 0;
+
 
     public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
     {
@@ -27,10 +29,10 @@ public class GameController
 
         while (continuePlaying)
         {
-            ResetNumberOfGuesses();
             RunNewGame();
+            SaveResult();
             PrintHighScores();
-            PrintResultForCurrentGame();
+            PrintScoreForCurrentGame();
 
             continuePlaying = QueryContinuePlaying();
         }
@@ -42,26 +44,20 @@ public class GameController
         currentPlayer = _ui.GetStringInput();
     }
 
-    private void ResetNumberOfGuesses()
-    {
-        numberOfGuessesInCurrentGame = 0;
-    }
-
     private void RunNewGame()
     {
+        ResetNumberOfGuesses();
         _game.GenerateGameGoal();
 
         _ui.OutputString("New game:\n");
-        //comment out or remove next line to play real games!
-        // _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
+        if (IsPractice) _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
 
-        string guess = string.Empty;
-        guess = _ui.GetStringInput();
+        string guess = _ui.GetStringInput();
         _game.EvaluateGuess(guess);
         _ui.OutputString(_game.CurrentResult + "\n");
         numberOfGuessesInCurrentGame++;
 
-        while (_game.GuessIsCorrect is false)
+        while (_game.GuessIsWrong)
         {
             guess = _ui.GetStringInput();
             _ui.OutputString(guess + "\n");
@@ -70,7 +66,14 @@ public class GameController
             _ui.OutputString(_game.CurrentResult + "\n");
             numberOfGuessesInCurrentGame++;
         }
+    }
+    private void ResetNumberOfGuesses()
+    {
+        numberOfGuessesInCurrentGame = 0;
+    }
 
+    private void SaveResult()
+    {
         _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame);
     }
 
@@ -79,12 +82,13 @@ public class GameController
         var highScores = _scoreDAO.GetHighScores();
         _ui.OutputString("Player   games average");
 
-        foreach (PlayerData player in highScores)
+        foreach (Player player in highScores)
         {
             _ui.OutputString(player.ToString());
         }
     }
-    private void PrintResultForCurrentGame()
+
+    private void PrintScoreForCurrentGame()
     {
         _ui.OutputString("Correct, it took " + numberOfGuessesInCurrentGame + " guesses");
     }
@@ -101,6 +105,4 @@ public class GameController
 
         return true;
     }
-
-
 }

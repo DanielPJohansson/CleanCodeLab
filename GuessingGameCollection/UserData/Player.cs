@@ -1,13 +1,13 @@
 namespace GuessingGameCollection.UserData;
 
-public class PlayerData
+public class Player
 {
     public string Name { get; private set; }
     public int NumberOfGames { get; private set; }
-    int totalGuess;
+    private int totalGuess;
 
 
-    public PlayerData(string name, int guesses)
+    public Player(string name, int guesses)
     {
         Name = name;
         NumberOfGames = 1;
@@ -31,7 +31,7 @@ public class PlayerData
 
     public override bool Equals(Object p)
     {
-        return Name.Equals(((PlayerData)p).Name);
+        return Name.Equals(((Player)p).Name);
     }
 
     public override string ToString()

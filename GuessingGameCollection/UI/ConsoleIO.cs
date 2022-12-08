@@ -4,7 +4,7 @@ public class ConsoleIO : IUI
 {
     public string GetStringInput()
     {
-        return Console.ReadLine();
+        return Console.ReadLine()!;
     }
 
     public void OutputString(string s)

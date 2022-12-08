@@ -2,14 +2,11 @@ using System.Text;
 
 namespace GuessingGameCollection.Games;
 
-/// <summary>
-/// Description of game rules
-/// </summary>
 public class Moo : IGame
 {
     public string Goal { get; set; } = string.Empty;
-    public string CurrentResult { get; set; } = string.Empty;
-    public bool GuessIsCorrect { get; set; } = false;
+    public string CurrentResult { get; private set; } = string.Empty;
+    public bool GuessIsWrong { get; private set; } = true;
 
     public void GenerateGameGoal()
     {
@@ -74,7 +71,7 @@ public class Moo : IGame
 
         if (numberOfCorrectDigitAndPosition == Goal.Length)
         {
-            GuessIsCorrect = true;
+            GuessIsWrong = false;
         }
 
         UpdateCurrentResult(numberOfCorrectDigitWrongPosition, numberOfCorrectDigitAndPosition);
