@@ -12,50 +12,61 @@ public class ScoreDAO : IScoreDAO
 
     public void PostScore(string name, int numberOfGuesses)
     {
-        StreamWriter output = new StreamWriter(_fileName, append: true);
-        output.WriteLine(name + "#&#" + numberOfGuesses);
-        output.Close();
+        using StreamWriter streamWriter = new StreamWriter(_fileName, append: true);
+        streamWriter.WriteLine(name + "#&#" + numberOfGuesses);
+        streamWriter.Close();
     }
 
-    public List<Player> GetHighScores()
+    public List<PlayerResult> GetHighScores()
     {
-        List<Player> results = ReadFromFile();
-
-        results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
+        List<PlayerResult> results = ReadResultsFromFile();
+        OrderResults(results);
 
         return results;
     }
 
-    private List<Player> ReadFromFile()
+    private void OrderResults(List<PlayerResult> results)
     {
-        StreamReader input = new StreamReader(_fileName);
-        List<Player> results = new List<Player>();
+        results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
+    }
+
+    private List<PlayerResult> ReadResultsFromFile()
+    {
+        List<PlayerResult> results = new List<PlayerResult>();
+
+        using StreamReader streamReader = new StreamReader(_fileName);
 
         string? line;
-        while ((line = input.ReadLine()) != null)
+        while ((line = streamReader.ReadLine()) != null)
         {
-            string[] nameAndScore = line.Split("#&#");
-            string name = nameAndScore[0];
-            int score = Convert.ToInt32(nameAndScore[1]);
+            PlayerResult result = ConvertToPlayerResult(line);
 
-            UpdateResults(results, name, score);
+            AddOrUpdateResults(results, result);
         }
 
-        input.Close();
+        streamReader.Close();
         return results;
     }
 
-    private static void UpdateResults(List<Player> results, string name, int score)
+    private static PlayerResult ConvertToPlayerResult(string? line)
     {
-        Player? player = results.SingleOrDefault(player => player.Name == name);
+        string[] nameAndScore = line.Split("#&#");
+        string name = nameAndScore[0];
+        int score = Convert.ToInt32(nameAndScore[1]);
+        return new PlayerResult(name, score);
+    }
+
+    private void AddOrUpdateResults(List<PlayerResult> results, PlayerResult result)
+    {
+        PlayerResult? player = results.SingleOrDefault(player => player.Name == result.Name);
 
         if (player is null)
         {
-            results.Add(new Player(name, score));
+            results.Add(result);
         }
         else
         {
-            player.Update(score);
+            player.Update(result.NumberOfGuesses);
         }
     }
 }

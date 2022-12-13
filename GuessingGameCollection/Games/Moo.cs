@@ -14,17 +14,6 @@ public class Moo : IGame
         Goal = BuildStringFromDigits(digits);
     }
 
-    private string BuildStringFromDigits(List<int> digits)
-    {
-        StringBuilder stringBuilder = new();
-        foreach (var digit in digits)
-        {
-            stringBuilder.Append(digit);
-        }
-
-        return stringBuilder.ToString();
-    }
-
     private List<int> GetUniqueRandomDigits(int numberOfDigits, int maxValue)
     {
         List<int> digits = new List<int>();
@@ -44,6 +33,17 @@ public class Moo : IGame
         }
 
         return digits;
+    }
+
+    private string BuildStringFromDigits(List<int> digits)
+    {
+        StringBuilder stringBuilder = new();
+        foreach (var digit in digits)
+        {
+            stringBuilder.Append(digit);
+        }
+
+        return stringBuilder.ToString();
     }
 
     public void EvaluateGuess(string guess)

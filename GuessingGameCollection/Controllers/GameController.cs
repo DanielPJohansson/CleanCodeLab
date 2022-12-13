@@ -24,18 +24,17 @@ public class GameController
     public void Run()
     {
         GetNameFromUser();
+        bool continuePlaying;
 
-        bool continuePlaying = true;
-
-        while (continuePlaying)
+        do
         {
             RunNewGame();
             SaveResult();
-            PrintHighScores();
-            PrintScoreForCurrentGame();
-
+            DisplayHighScores();
+            DisplayScoreForCurrentGame();
             continuePlaying = QueryContinuePlaying();
         }
+        while (continuePlaying);
     }
 
     private void GetNameFromUser()
@@ -49,27 +48,36 @@ public class GameController
         ResetNumberOfGuesses();
         _game.GenerateGameGoal();
 
-        _ui.OutputString("New game:\n");
-        if (IsPractice) _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
+        DisplayStartMessage();
 
         string guess = _ui.GetStringInput();
-        _game.EvaluateGuess(guess);
-        _ui.OutputString(_game.CurrentResult + "\n");
-        numberOfGuessesInCurrentGame++;
+        HandleGuess(guess);
 
         while (_game.GuessIsWrong)
         {
             guess = _ui.GetStringInput();
             _ui.OutputString(guess + "\n");
 
-            _game.EvaluateGuess(guess);
-            _ui.OutputString(_game.CurrentResult + "\n");
-            numberOfGuessesInCurrentGame++;
+            HandleGuess(guess);
         }
     }
+
     private void ResetNumberOfGuesses()
     {
         numberOfGuessesInCurrentGame = 0;
+    }
+
+    private void DisplayStartMessage()
+    {
+        _ui.OutputString("New game:\n");
+        if (IsPractice) _ui.OutputString("For practice, number is: " + _game.Goal + "\n");
+    }
+
+    private void HandleGuess(string guess)
+    {
+        _game.EvaluateGuess(guess);
+        _ui.OutputString(_game.CurrentResult + "\n");
+        numberOfGuessesInCurrentGame++;
     }
 
     private void SaveResult()
@@ -77,18 +85,18 @@ public class GameController
         _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame);
     }
 
-    private void PrintHighScores()
+    private void DisplayHighScores()
     {
-        var highScores = _scoreDAO.GetHighScores();
+        List<PlayerResult> highScores = _scoreDAO.GetHighScores();
         _ui.OutputString("Player   games average");
 
-        foreach (Player player in highScores)
+        foreach (PlayerResult player in highScores)
         {
             _ui.OutputString(player.ToString());
         }
     }
 
-    private void PrintScoreForCurrentGame()
+    private void DisplayScoreForCurrentGame()
     {
         _ui.OutputString("Correct, it took " + numberOfGuessesInCurrentGame + " guesses");
     }
@@ -98,7 +106,7 @@ public class GameController
         _ui.OutputString("Continue?");
         string answer = _ui.GetStringInput();
 
-        if (!string.IsNullOrEmpty(answer) && answer.StartsWith('n'))
+        if (answer.StartsWith('n'))
         {
             return false;
         }

@@ -34,11 +34,11 @@ public class ScoreDAOTests
         scoreDAO.PostScore("Ali", 9);
         scoreDAO.PostScore("Daniel", 12);
 
-        List<Player> expected = new List<Player>() {
-            new Player("Erik", 6),
-            new Player("Åsa", 8),
-            new Player("Ali", 8),
-            new Player("Daniel", 8)
+        List<PlayerResult> expected = new List<PlayerResult>() {
+            new PlayerResult("Erik", 6),
+            new PlayerResult("Åsa", 8),
+            new PlayerResult("Ali", 8),
+            new PlayerResult("Daniel", 8)
         };
         expected[0].Update(7);
         expected[2].Update(9);
@@ -47,14 +47,11 @@ public class ScoreDAOTests
         expected[3].Update(12);
 
 
-        List<Player> retrievedData = scoreDAO.GetHighScores();
-
-        CollectionAssert.AreEqual(expected, retrievedData);
+        List<PlayerResult> retrievedData = scoreDAO.GetHighScores();
 
         for (int i = 0; i < retrievedData.Count; i++)
         {
-            Assert.AreEqual(expected[i].NumberOfGames, retrievedData[i].NumberOfGames);
-            Assert.AreEqual(expected[i].GetAverageScore(), retrievedData[i].GetAverageScore());
+            Assert.AreEqual(expected[i].ToString(), retrievedData[i].ToString());
         }
     }
 
