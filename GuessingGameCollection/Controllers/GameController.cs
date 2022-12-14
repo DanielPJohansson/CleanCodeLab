@@ -29,7 +29,7 @@ public class GameController
         do
         {
             RunNewGame();
-            SaveResult();
+            SaveScore();
             DisplayHighScores();
             DisplayScoreForCurrentGame();
             continuePlaying = QueryContinuePlaying();
@@ -80,17 +80,17 @@ public class GameController
         numberOfGuessesInCurrentGame++;
     }
 
-    private void SaveResult()
+    private void SaveScore()
     {
         _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame);
     }
 
     private void DisplayHighScores()
     {
-        List<PlayerResult> highScores = _scoreDAO.GetHighScores();
+        List<Player> highScores = _scoreDAO.GetHighScores();
         _ui.OutputString("Player   games average");
 
-        foreach (PlayerResult player in highScores)
+        foreach (Player player in highScores)
         {
             _ui.OutputString(player.ToString());
         }

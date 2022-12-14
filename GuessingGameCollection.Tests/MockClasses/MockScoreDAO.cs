@@ -6,11 +6,11 @@ namespace GuessingGameCollection.Tests.MockClasses;
 public class MockScoreDAO : IScoreDAO
 {
     public string? PostedScore { get; set; }
-    public PlayerResult? PostedPlayerData { get; set; }
+    public Player? PostedPlayerData { get; set; }
 
-    public List<PlayerResult> GetHighScores()
+    public List<Player> GetHighScores()
     {
-        List<PlayerResult> players = new();
+        List<Player> players = new();
         players.Add(PostedPlayerData);
 
         return players;
@@ -18,6 +18,6 @@ public class MockScoreDAO : IScoreDAO
 
     public void PostScore(string name, int numberOfGuesses)
     {
-        PostedPlayerData = new PlayerResult(name, numberOfGuesses);
+        PostedPlayerData = new Player(name, numberOfGuesses);
     }
 }

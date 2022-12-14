@@ -17,56 +17,60 @@ public class ScoreDAO : IScoreDAO
         streamWriter.Close();
     }
 
-    public List<PlayerResult> GetHighScores()
+    public List<Player> GetHighScores()
     {
-        List<PlayerResult> results = ReadResultsFromFile();
-        OrderResults(results);
+        List<Player> results = ReadPlayerResultsFromFile();
+        OrderResultsByScoreAscending(results);
 
         return results;
     }
 
-    private void OrderResults(List<PlayerResult> results)
+    private List<Player> ReadPlayerResultsFromFile()
     {
-        results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
-    }
-
-    private List<PlayerResult> ReadResultsFromFile()
-    {
-        List<PlayerResult> results = new List<PlayerResult>();
+        List<Player> results = new List<Player>();
 
         using StreamReader streamReader = new StreamReader(_fileName);
 
         string? line;
         while ((line = streamReader.ReadLine()) != null)
         {
-            PlayerResult result = ConvertToPlayerResult(line);
-
-            AddOrUpdateResults(results, result);
+            Player player = ConvertToPlayer(line);
+            AddOrUpdatePlayer(results, player);
         }
 
         streamReader.Close();
         return results;
     }
-
-    private static PlayerResult ConvertToPlayerResult(string? line)
+    private Player ConvertToPlayer(string line)
     {
         string[] nameAndScore = line.Split("#&#");
         string name = nameAndScore[0];
         int score = Convert.ToInt32(nameAndScore[1]);
-        return new PlayerResult(name, score);
+
+        return new Player(name, score);
     }
 
-    private void AddOrUpdateResults(List<PlayerResult> results, PlayerResult result)
+    private void AddOrUpdatePlayer(List<Player> results, Player player)
     {
-        PlayerResult? player = results.SingleOrDefault(player => player.Name == result.Name);
+        int index = results.IndexOf(player);
 
-        if (player is null)
+        if (PlayerNotInResultList(index))
         {
-            results.Add(result);
+            results.Add(player);
         }
         else
         {
-            player.Update(result.NumberOfGuesses);
+            results[index].Update(player.TotalScore);
         }
+    }
+
+    private bool PlayerNotInResultList(int index)
+    {
+        return index < 0;
+    }
+
+    private void OrderResultsByScoreAscending(List<Player> results)
+    {
+        results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
     }
 }
