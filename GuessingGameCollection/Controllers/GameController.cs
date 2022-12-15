@@ -45,7 +45,7 @@ public class GameController
 
     private void RunNewGame()
     {
-        ResetNumberOfGuesses();
+        ResetGame();
         _game.GenerateGameGoal();
 
         DisplayStartMessage();
@@ -62,9 +62,10 @@ public class GameController
         }
     }
 
-    private void ResetNumberOfGuesses()
+    private void ResetGame()
     {
         numberOfGuessesInCurrentGame = 0;
+        _game.Reset();
     }
 
     private void DisplayStartMessage()

@@ -5,7 +5,8 @@ using GuessingGameCollection.Games;
 using GuessingGameCollection.UI;
 
 IUI ui = new ConsoleIO();
-IGame game = new Moo();
+// IGame game = new Moo();
+IGame game = new MasterMind();
 IScoreDAO scoreDAO = new ScoreDAO("result.txt");
 
 GameController gameController = new GameController(ui, game, scoreDAO);

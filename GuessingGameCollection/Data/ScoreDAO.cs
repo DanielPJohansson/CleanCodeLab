@@ -41,7 +41,7 @@ public class ScoreDAO : IScoreDAO
         streamReader.Close();
         return results;
     }
-    private Player ConvertToPlayer(string line)
+    private static Player ConvertToPlayer(string line)
     {
         string[] nameAndScore = line.Split("#&#");
         string name = nameAndScore[0];
@@ -50,7 +50,7 @@ public class ScoreDAO : IScoreDAO
         return new Player(name, score);
     }
 
-    private void AddOrUpdatePlayer(List<Player> results, Player player)
+    private static void AddOrUpdatePlayer(List<Player> results, Player player)
     {
         int index = results.IndexOf(player);
 
@@ -64,12 +64,12 @@ public class ScoreDAO : IScoreDAO
         }
     }
 
-    private bool PlayerNotInResultList(int index)
+    private static bool PlayerNotInResultList(int index)
     {
         return index < 0;
     }
 
-    private void OrderResultsByScoreAscending(List<Player> results)
+    private static void OrderResultsByScoreAscending(List<Player> results)
     {
         results.Sort((p1, p2) => p1.GetAverageScore().CompareTo(p2.GetAverageScore()));
     }

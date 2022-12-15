@@ -9,4 +9,6 @@ public interface IGame
     public void GenerateGameGoal();
 
     public void EvaluateGuess(string guess);
+
+    public void Reset();
 }

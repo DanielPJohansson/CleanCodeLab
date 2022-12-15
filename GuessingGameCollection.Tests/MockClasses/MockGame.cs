@@ -33,4 +33,9 @@ public class MockGame : IGame
     {
         Goal = "1234";
     }
+
+    public void Reset()
+    {
+        GuessIsWrong = true;
+    }
 }

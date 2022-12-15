@@ -36,13 +36,14 @@ public class MooGameLogicTest
 
     [TestMethod()]
     [DataRow("1234", "1243", "BB,CC")]
+    [DataRow("1234", "1155", "B,C")]
+    [DataRow("1234", "5511", ",CC")]
     [DataRow("1234", "7896", ",")]
-    [DataRow("1234", "jhg", ",")]
     [DataRow("1234", "4321", ",CCCC")]
     [DataRow("1234", "1234", "BBBB,")]
     [DataRow("1234", "", ",")]
-    [DataRow("1234", "987556", ",")]
     [DataRow("1234", "987512", ",")]
+    [DataRow("1234", "jhg", ",")]
     public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
         _game.Goal = goal;

@@ -10,32 +10,35 @@ public class Moo : IGame
 
     public void GenerateGameGoal()
     {
-        List<int> digits = GetUniqueRandomDigits(4, 9);
+        int[] digits = GetFourUniqueRandomDigits();
         Goal = BuildStringFromDigits(digits);
     }
 
-    private List<int> GetUniqueRandomDigits(int numberOfDigits, int maxValue)
+    private int[] GetFourUniqueRandomDigits()
     {
-        List<int> digits = new List<int>();
+        int numberOfDigits = 4;
+        int maxValue = 10;
+
+        int[] digits = new int[numberOfDigits];
 
         Random randomGenerator = new Random();
 
         for (int i = 0; i < numberOfDigits; i++)
         {
-            int randomDigit = randomGenerator.Next(maxValue + 1);
+            int randomDigit = randomGenerator.Next(maxValue);
 
             while (digits.Contains(randomDigit))
             {
-                randomDigit = randomGenerator.Next(maxValue + 1);
+                randomDigit = randomGenerator.Next(maxValue);
             }
 
-            digits.Add(randomDigit);
+            digits[i] = randomDigit;
         }
 
         return digits;
     }
 
-    private string BuildStringFromDigits(List<int> digits)
+    private string BuildStringFromDigits(int[] digits)
     {
         StringBuilder stringBuilder = new();
         foreach (var digit in digits)
@@ -80,5 +83,10 @@ public class Moo : IGame
     private void UpdateCurrentResult(int numberOfCorrectDigitWrongPosition, int numberOfCorrectDigitAndPosition)
     {
         CurrentResult = "BBBB".Substring(0, numberOfCorrectDigitAndPosition) + "," + "CCCC".Substring(0, numberOfCorrectDigitWrongPosition);
+    }
+
+    public void Reset()
+    {
+        GuessIsWrong = true;
     }
 }
