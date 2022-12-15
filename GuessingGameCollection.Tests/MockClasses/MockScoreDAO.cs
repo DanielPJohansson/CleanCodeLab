@@ -8,7 +8,7 @@ public class MockScoreDAO : IScoreDAO
     public string? PostedScore { get; set; }
     public Player? PostedPlayerData { get; set; }
 
-    public List<Player> GetHighScores()
+    public List<Player> GetHighScores(string game)
     {
         List<Player> players = new();
         players.Add(PostedPlayerData);
@@ -16,8 +16,8 @@ public class MockScoreDAO : IScoreDAO
         return players;
     }
 
-    public void PostScore(string name, int numberOfGuesses)
+    public void PostScore(string name, int numberOfGuesses, string game)
     {
-        PostedPlayerData = new Player(name, numberOfGuesses);
+        PostedPlayerData = new Player(name, numberOfGuesses, game);
     }
 }

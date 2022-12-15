@@ -23,7 +23,7 @@ public class GameController
 
     public void Run()
     {
-        GetNameFromUser();
+        GetPlayerName();
         bool continuePlaying;
 
         do
@@ -37,7 +37,7 @@ public class GameController
         while (continuePlaying);
     }
 
-    private void GetNameFromUser()
+    private void GetPlayerName()
     {
         _ui.OutputString("Enter your user name:\n");
         currentPlayer = _ui.GetStringInput();
@@ -83,17 +83,17 @@ public class GameController
 
     private void SaveScore()
     {
-        _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame);
+        _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame, _game.GetType().Name);
     }
 
     private void DisplayHighScores()
     {
-        List<Player> highScores = _scoreDAO.GetHighScores();
+        List<Player> highScores = _scoreDAO.GetHighScores(_game.GetType().Name);
         _ui.OutputString("Player   games average");
 
         foreach (Player player in highScores)
         {
-            _ui.OutputString(player.ToString());
+            _ui.OutputString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.Name, player.NumberOfGames, player.GetAverageScore()));
         }
     }
 

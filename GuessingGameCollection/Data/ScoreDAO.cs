@@ -10,22 +10,22 @@ public class ScoreDAO : IScoreDAO
         _fileName = fileName;
     }
 
-    public void PostScore(string name, int numberOfGuesses)
+    public void PostScore(string name, int numberOfGuesses, string gameName)
     {
         using StreamWriter streamWriter = new StreamWriter(_fileName, append: true);
-        streamWriter.WriteLine(name + "#&#" + numberOfGuesses);
+        streamWriter.WriteLine(name + "#&#" + numberOfGuesses + "#&#" + gameName);
         streamWriter.Close();
     }
 
-    public List<Player> GetHighScores()
+    public List<Player> GetHighScores(string game)
     {
-        List<Player> results = ReadPlayerResultsFromFile();
+        List<Player> results = ReadPlayerResultsFromFile(game);
         OrderResultsByScoreAscending(results);
 
         return results;
     }
 
-    private List<Player> ReadPlayerResultsFromFile()
+    private List<Player> ReadPlayerResultsFromFile(string game)
     {
         List<Player> results = new List<Player>();
 
@@ -35,19 +35,24 @@ public class ScoreDAO : IScoreDAO
         while ((line = streamReader.ReadLine()) != null)
         {
             Player player = ConvertToPlayer(line);
-            AddOrUpdatePlayer(results, player);
+            if (player.Game == game)
+            {
+                AddOrUpdatePlayer(results, player);
+            }
         }
 
         streamReader.Close();
         return results;
     }
+
     private static Player ConvertToPlayer(string line)
     {
-        string[] nameAndScore = line.Split("#&#");
-        string name = nameAndScore[0];
-        int score = Convert.ToInt32(nameAndScore[1]);
+        string[] nameScoreAndGame = line.Split("#&#");
+        string name = nameScoreAndGame[0];
+        int score = Convert.ToInt32(nameScoreAndGame[1]);
+        string game = nameScoreAndGame[2];
 
-        return new Player(name, score);
+        return new Player(name, score, game);
     }
 
     private static void AddOrUpdatePlayer(List<Player> results, Player player)

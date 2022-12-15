@@ -11,10 +11,10 @@ public class MasterMind : IGame
     public void EvaluateGuess(string guess)
     {
         string lengthAdjustedGuess = EnsureGuessLengthMatchesGoalLength(guess);
-        bool[] digitInGuessIsMatched = new bool[lengthAdjustedGuess.Length];
+        bool[] digitIsMatched = new bool[lengthAdjustedGuess.Length];
 
-        int numberOfExactMatches = GetExactMatches(lengthAdjustedGuess, digitInGuessIsMatched);
-        int numberOfMatchesInWrongPosition = GetWrongPositionMatches(lengthAdjustedGuess, digitInGuessIsMatched);
+        int numberOfExactMatches = GetExactMatches(lengthAdjustedGuess, digitIsMatched);
+        int numberOfMatchesInWrongPosition = GetMatchesInWrongPosition(lengthAdjustedGuess, digitIsMatched);
 
         if (numberOfExactMatches == Goal.Length)
         {
@@ -39,7 +39,7 @@ public class MasterMind : IGame
         return guess;
     }
 
-    private int GetExactMatches(string guess, bool[] digitInGuessIsMatched)
+    private int GetExactMatches(string guess, bool[] digitIsMatched)
     {
         int matches = 0;
         for (int i = 0; i < Goal.Length; i++)
@@ -47,14 +47,14 @@ public class MasterMind : IGame
             if (Goal[i] == guess[i])
             {
                 matches++;
-                digitInGuessIsMatched[i] = true;
+                digitIsMatched[i] = true;
             }
         }
 
         return matches;
     }
 
-    private int GetWrongPositionMatches(string guess, bool[] digitInGuessIsMatched)
+    private int GetMatchesInWrongPosition(string guess, bool[] digitIsMatched)
     {
         int wrongPositionMatches = 0;
 
@@ -62,11 +62,11 @@ public class MasterMind : IGame
         {
             for (int j = 0; j < Goal.Length; j++)
             {
-                bool equalAndNotMatched = Goal[i] == guess[j] && digitInGuessIsMatched[j] == false;
+                bool equalAndNotMatched = Goal[i] == guess[j] && digitIsMatched[j] == false;
 
                 if (equalAndNotMatched)
                 {
-                    digitInGuessIsMatched[j] = true;
+                    digitIsMatched[j] = true;
                     wrongPositionMatches++;
                     break;
                 }

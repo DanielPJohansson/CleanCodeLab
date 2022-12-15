@@ -2,18 +2,19 @@ namespace GuessingGameCollection.UserData;
 
 public class Player
 {
-    public string Name { get; set; }
-    public int NumberOfGames { get; set; }
-    public int TotalScore { get; set; }
+    public string Name { get; private set; }
+    public int NumberOfGames { get; private set; }
+    public int TotalScore { get; private set; }
+    public string Game { get; private set; }
 
-    public Player(string name, int score)
+    public Player(string name, int score, string game)
     {
         Name = name;
         NumberOfGames = 1;
         TotalScore = score;
+        Game = game;
     }
 
-    //Does more than one thing
     public void Update(int score)
     {
         TotalScore += score;
@@ -38,10 +39,5 @@ public class Player
     public override int GetHashCode()
     {
         return Name.GetHashCode();
-    }
-
-    public override string ToString()
-    {
-        return string.Format("{0,-9}{1,5:D}{2,9:F2}", Name, NumberOfGames, GetAverageScore());
     }
 }
