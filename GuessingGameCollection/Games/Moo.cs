@@ -1,64 +1,39 @@
 using System.Text;
+using GuessingGameCollection.GameComponents;
 
 namespace GuessingGameCollection.Games;
 
 public class Moo : IGame
 {
-    public string Goal { get; set; } = string.Empty;
-    public string CurrentResult { get; private set; } = string.Empty;
-    public bool GuessIsWrong { get; private set; } = true;
+    private string goal;
+    private IGameStrategy _gameStrategy;
 
-    public void GenerateGameGoal()
+    public Moo(IGameStrategy gameStrategy)
     {
-        int[] digits = GetFourUniqueRandomDigits();
-        Goal = BuildStringFromDigits(digits);
+        _gameStrategy = gameStrategy;
     }
 
-    private int[] GetFourUniqueRandomDigits()
+    public void SetGoalGenerator(IGameStrategy gameStrategy)
     {
-        int numberOfDigits = 4;
-        int maxValue = 10;
-
-        int[] digits = new int[numberOfDigits];
-
-        Random randomGenerator = new Random();
-
-        for (int i = 0; i < numberOfDigits; i++)
-        {
-            int randomDigit = randomGenerator.Next(maxValue);
-
-            while (digits.Contains(randomDigit))
-            {
-                randomDigit = randomGenerator.Next(maxValue);
-            }
-
-            digits[i] = randomDigit;
-        }
-
-        return digits;
+        _gameStrategy = gameStrategy;
     }
 
-    private string BuildStringFromDigits(int[] digits)
+    public string GenerateGameGoal()
     {
-        StringBuilder stringBuilder = new();
-        foreach (var digit in digits)
-        {
-            stringBuilder.Append(digit);
-        }
-
-        return stringBuilder.ToString();
+        goal = _gameStrategy.GenerateRandomGoal();
+        return goal;
     }
 
-    public void EvaluateGuess(string guess)
+    public string EvaluateGuess(string guess)
     {
         int numberOfCorrectDigitWrongPosition = 0;
         int numberOfCorrectDigitAndPosition = 0;
 
-        for (int i = 0; i < Goal.Length; i++)
+        for (int i = 0; i < goal.Length; i++)
         {
-            for (int j = 0; j < Goal.Length && j < guess.Length; j++)
+            for (int j = 0; j < goal.Length && j < guess.Length; j++)
             {
-                if (Goal[i] == guess[j])
+                if (goal[i] == guess[j])
                 {
                     if (i == j)
                     {
@@ -72,21 +47,6 @@ public class Moo : IGame
             }
         }
 
-        if (numberOfCorrectDigitAndPosition == Goal.Length)
-        {
-            GuessIsWrong = false;
-        }
-
-        UpdateCurrentResult(numberOfCorrectDigitWrongPosition, numberOfCorrectDigitAndPosition);
-    }
-
-    private void UpdateCurrentResult(int numberOfCorrectDigitWrongPosition, int numberOfCorrectDigitAndPosition)
-    {
-        CurrentResult = "BBBB".Substring(0, numberOfCorrectDigitAndPosition) + "," + "CCCC".Substring(0, numberOfCorrectDigitWrongPosition);
-    }
-
-    public void Reset()
-    {
-        GuessIsWrong = true;
+        return _gameStrategy.FormatResultForGameVariant(numberOfCorrectDigitWrongPosition, numberOfCorrectDigitAndPosition);
     }
 }

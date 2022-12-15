@@ -4,11 +4,9 @@ namespace GuessingGameCollection.Games;
 
 public class MasterMind : IGame
 {
-    public string Goal { get; set; } = string.Empty;
-    public string CurrentResult { get; private set; } = string.Empty;
-    public bool GuessIsWrong { get; private set; } = true;
+    private string goal;
 
-    public void EvaluateGuess(string guess)
+    public string EvaluateGuess(string guess)
     {
         string lengthAdjustedGuess = EnsureGuessLengthMatchesGoalLength(guess);
         bool[] digitIsMatched = new bool[lengthAdjustedGuess.Length];
@@ -16,22 +14,17 @@ public class MasterMind : IGame
         int numberOfExactMatches = GetExactMatches(lengthAdjustedGuess, digitIsMatched);
         int numberOfMatchesInWrongPosition = GetMatchesInWrongPosition(lengthAdjustedGuess, digitIsMatched);
 
-        if (numberOfExactMatches == Goal.Length)
-        {
-            GuessIsWrong = false;
-        }
-
-        UpdateCurrentResult(numberOfExactMatches, numberOfMatchesInWrongPosition);
+        return UpdateCurrentResult(numberOfExactMatches, numberOfMatchesInWrongPosition);
     }
 
     private string EnsureGuessLengthMatchesGoalLength(string guess)
     {
-        if (guess.Length > Goal.Length)
+        if (guess.Length > goal.Length)
         {
-            return guess.Substring(0, Goal.Length);
+            return guess.Substring(0, goal.Length);
         }
 
-        while (guess.Length < Goal.Length)
+        while (guess.Length < goal.Length)
         {
             guess += " ";
         }
@@ -42,9 +35,9 @@ public class MasterMind : IGame
     private int GetExactMatches(string guess, bool[] digitIsMatched)
     {
         int matches = 0;
-        for (int i = 0; i < Goal.Length; i++)
+        for (int i = 0; i < goal.Length; i++)
         {
-            if (Goal[i] == guess[i])
+            if (goal[i] == guess[i])
             {
                 matches++;
                 digitIsMatched[i] = true;
@@ -58,11 +51,11 @@ public class MasterMind : IGame
     {
         int wrongPositionMatches = 0;
 
-        for (int i = 0; i < Goal.Length; i++)
+        for (int i = 0; i < goal.Length; i++)
         {
-            for (int j = 0; j < Goal.Length; j++)
+            for (int j = 0; j < goal.Length; j++)
             {
-                bool equalAndNotMatched = Goal[i] == guess[j] && digitIsMatched[j] == false;
+                bool equalAndNotMatched = goal[i] == guess[j] && digitIsMatched[j] == false;
 
                 if (equalAndNotMatched)
                 {
@@ -77,20 +70,20 @@ public class MasterMind : IGame
     }
 
 
-    private void UpdateCurrentResult(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
+    private string UpdateCurrentResult(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
     {
         StringBuilder stringBuilder = new();
         stringBuilder.Append('B', numberOfExactMatches);
         stringBuilder.Append(',');
         stringBuilder.Append('C', numberOfMatchesInWrongPosition);
-        CurrentResult = stringBuilder.ToString();
+        return stringBuilder.ToString();
     }
 
-    public void GenerateGameGoal()
+    public string GenerateGameGoal()
     {
         int maxValue = 5;
         int[] digits = GenerateFourRandomDigits(maxValue);
-        Goal = BuildStringFromDigits(digits);
+        return BuildStringFromDigits(digits);
     }
 
     private static int[] GenerateFourRandomDigits(int maxValue)
@@ -117,10 +110,5 @@ public class MasterMind : IGame
         }
 
         return stringBuilder.ToString();
-    }
-
-    public void Reset()
-    {
-        GuessIsWrong = true;
     }
 }

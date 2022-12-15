@@ -6,36 +6,23 @@ public class MockGame : IGame
 {
     public string Goal { get; set; } = string.Empty;
 
-    public string CurrentResult
-    {
-        get
-        {
-            string result = Results.First();
-            Results.Remove(result);
-            return result;
-        }
-    }
     public List<string> Results { get; set; } = new();
     public List<string> Guesses { get; set; } = new();
 
     public bool GuessIsWrong { get; set; } = true;
 
-    public void EvaluateGuess(string guess)
+    public string EvaluateGuess(string guess)
     {
         Guesses.Add(guess);
-        if (guess == Goal)
-        {
-            GuessIsWrong = false;
-        }
+        string result = Results.First();
+        Results.Remove(result);
+        return result;
     }
 
-    public void GenerateGameGoal()
+    public string GenerateGameGoal()
     {
-        Goal = "1234";
+        return "1234";
     }
 
-    public void Reset()
-    {
-        GuessIsWrong = true;
-    }
+
 }

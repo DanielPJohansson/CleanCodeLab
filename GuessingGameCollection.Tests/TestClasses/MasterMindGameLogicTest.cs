@@ -23,6 +23,7 @@ public class MasterMindGameLogicTest
     [DataRow("1154", "abcd", ",")]
     public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
+
         _masterMind.Goal = goal;
 
         _masterMind.EvaluateGuess(guessInput);
