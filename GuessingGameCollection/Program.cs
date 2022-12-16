@@ -2,11 +2,12 @@
 using GuessingGameCollection.Controllers;
 using GuessingGameCollection.Data;
 using GuessingGameCollection.Games;
+using GuessingGameCollection.Games.Components;
 using GuessingGameCollection.UI;
 
 IUI ui = new ConsoleIO();
-// IGame game = new Moo();
-IGame game = new MasterMind();
+IGameStrategy gameStrategy = new MasterMindStrategy();
+IGame game = new GuessingGame(gameStrategy);
 IScoreDAO scoreDAO = new ScoreDAO("result.txt");
 
 GameController gameController = new GameController(ui, game, scoreDAO);

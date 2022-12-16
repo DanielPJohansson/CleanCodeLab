@@ -1,4 +1,4 @@
-using GuessingGameCollection.GameComponents;
+using GuessingGameCollection.Games.Components;
 using GuessingGameCollection.Games;
 using GuessingGameCollection.Tests.MockClasses;
 
@@ -7,19 +7,19 @@ namespace GuessingGameCollection.Tests;
 [TestClass()]
 public class MooGameLogicTest
 {
-    private readonly Moo _game;
+    private readonly GuessingGame _game;
 
 
     public MooGameLogicTest()
     {
 
-        _game = new Moo(new MooStrategy());
+        _game = new GuessingGame(new MooStrategy());
     }
 
     [TestMethod()]
     public void GenerateGameGoal_ReturnsOnlyDigits()
     {
-        string result = _game.GetGameGoal();
+        string result = _game.GenerateGameGoal();
 
         foreach (var character in result)
         {
@@ -30,15 +30,15 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsStringOfLengthFour()
     {
-        string result = _game.GetGameGoal();
+        string result = _game.GenerateGameGoal();
 
         Assert.AreEqual(result.Length, 4);
     }
 
     [TestMethod()]
     [DataRow("1234", "1243", "BB,CC")]
-    [DataRow("1234", "1155", "B,C")]
-    [DataRow("1234", "5511", ",CC")]
+    [DataRow("1234", "1155", "B,")]
+    [DataRow("1234", "5511", ",C")]
     [DataRow("1234", "7896", ",")]
     [DataRow("1234", "4321", ",CCCC")]
     [DataRow("1234", "1234", "BBBB,")]
@@ -49,10 +49,10 @@ public class MooGameLogicTest
     {
         MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 
-        _game.SetGoalGenerator(strategy);
-        _game.GetGameGoal();
+        _game.SetStrategy(strategy);
+        _game.GenerateGameGoal();
 
-        string result = _game.GetResultOfGuess(guessInput);
+        string result = _game.GetResultOfGuess(guessInput, goal);
 
 
         Assert.AreEqual(expected, result);

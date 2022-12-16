@@ -1,23 +1,22 @@
 using GuessingGameCollection.Data;
-using GuessingGameCollection.UserData;
 
 namespace GuessingGameCollection.Tests.MockClasses;
 
 public class MockScoreDAO : IScoreDAO
 {
     public string? PostedScore { get; set; }
-    public Player? PostedPlayerData { get; set; }
+    public PlayerResult? PostedPlayerData { get; set; }
 
-    public List<Player> GetHighScores(string game)
+    public List<PlayerResult> GetHighScores(string game)
     {
-        List<Player> players = new();
+        List<PlayerResult> players = new();
         players.Add(PostedPlayerData);
 
         return players;
     }
 
-    public void PostScore(string name, int numberOfGuesses, string game)
+    public void PostScore(PlayerResult playerResult)
     {
-        PostedPlayerData = new Player(name, numberOfGuesses, game);
+        PostedPlayerData = playerResult;
     }
 }

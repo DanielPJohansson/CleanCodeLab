@@ -1,13 +1,13 @@
-namespace GuessingGameCollection.UserData;
+namespace GuessingGameCollection.Data;
 
-public class Player
+public class PlayerResult
 {
     public string Name { get; private set; }
     public int NumberOfGames { get; private set; }
     public int TotalScore { get; private set; }
     public string Game { get; private set; }
 
-    public Player(string name, int score, string game)
+    public PlayerResult(string name, int score, string game)
     {
         Name = name;
         NumberOfGames = 1;
@@ -28,9 +28,9 @@ public class Player
 
     public override bool Equals(Object? other)
     {
-        if (other is Player)
+        if (other is PlayerResult)
         {
-            return Name.Equals(((Player)other).Name);
+            return Name.Equals(((PlayerResult)other).Name);
         }
 
         return false;

@@ -1,8 +1,6 @@
-using GuessingGameCollection.UserData;
-
 namespace GuessingGameCollection.Data;
 public interface IScoreDAO
 {
-    public void PostScore(string name, int numberOfGuesses, string game);
-    public List<Player> GetHighScores(string game);
+    public void PostScore(PlayerResult playerResult);
+    public List<PlayerResult> GetHighScores(string game);
 }

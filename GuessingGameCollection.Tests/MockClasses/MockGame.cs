@@ -11,7 +11,7 @@ public class MockGame : IGame
 
     public bool GuessIsWrong { get; set; } = true;
 
-    public string GetResultOfGuess(string guess)
+    public string GetResultOfGuess(string guess, string goal)
     {
         Guesses.Add(guess);
         string result = Results.First();
@@ -19,10 +19,13 @@ public class MockGame : IGame
         return result;
     }
 
-    public string GetGameGoal()
+    public string GenerateGameGoal()
     {
         return "1234";
     }
 
-
+    public string GetName()
+    {
+        throw new NotImplementedException();
+    }
 }

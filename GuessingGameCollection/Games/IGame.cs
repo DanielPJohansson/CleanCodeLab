@@ -2,8 +2,10 @@ namespace GuessingGameCollection.Games;
 
 public interface IGame
 {
-    public string GetGameGoal();
+    public string GenerateGameGoal();
 
-    public string GetResultOfGuess(string guess);
+    public string GetResultOfGuess(string guess, string goal);
+
+    public string GetName();
 
 }

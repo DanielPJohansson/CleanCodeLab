@@ -1,10 +1,7 @@
-namespace GuessingGameCollection.GameComponents;
-public class MasterMind : IGameStrategy
+namespace GuessingGameCollection.Games.Components;
+public class MasterMindStrategy : IGameStrategy
 {
-    public string FormatResultForGameVariant(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
-    {
-        throw new NotImplementedException();
-    }
+    public string Name { get; } = "MasterMind";
 
     public string GenerateRandomGoal()
     {
@@ -15,7 +12,7 @@ public class MasterMind : IGameStrategy
 
     private static int[] GenerateFourRandomDigitsBetweenZeroAndFive()
     {
-        int numberOfDigits = 4;
+        int numberOfDigits = 8;
         int maxValue = 6;
 
         int[] digits = new int[numberOfDigits];

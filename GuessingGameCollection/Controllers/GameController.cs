@@ -1,7 +1,6 @@
 using GuessingGameCollection.Data;
 using GuessingGameCollection.Games;
 using GuessingGameCollection.UI;
-using GuessingGameCollection.UserData;
 
 namespace GuessingGameCollection.Controllers;
 public class GameController
@@ -10,9 +9,6 @@ public class GameController
     private readonly IGame _game;
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
-    private string currentPlayer;
-    private int numberOfGuessesInCurrentGame = 0;
-    private string answer;
 
 
     public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
@@ -24,80 +20,93 @@ public class GameController
 
     public void Run()
     {
-        GetPlayerName();
+        string playerName = GetPlayerName();
+        SelectGame();
 
         do
         {
-            RunNewGame();
-            SaveScore();
+            int score = PlayNewGame();
+            SaveScore(playerName, score);
             DisplayHighScores();
-            DisplayScoreForCurrentGame();
+            DisplayScoreForCurrentGame(score);
         }
         while (QueryContinuePlaying());
     }
 
-    private void GetPlayerName()
+    private string GetPlayerName()
     {
         _ui.OutputString("Enter your user name:\n");
-        currentPlayer = _ui.GetStringInput();
+        return _ui.GetStringInput();
+    }
+    private void SelectGame()
+    {
+        throw new NotImplementedException();
     }
 
-    private void RunNewGame()
+    private int PlayNewGame()
     {
-        ResetGame();
-        answer = _game.GetGameGoal();
+        string goal = _game.GenerateGameGoal();
 
         DisplayStartMessage();
+        DisplayGoalIfPractice(goal);
+
+        int numberOfGuesses = 0;
 
         string guess = _ui.GetStringInput();
-        HandleGuess(guess);
+        HandleGuess(guess, goal);
+        numberOfGuesses++;
 
-        while (guess != answer)
+        while (guess != goal)
         {
             guess = _ui.GetStringInput();
             _ui.OutputString(guess + "\n");
 
-            HandleGuess(guess);
+            HandleGuess(guess, goal);
+            numberOfGuesses++;
         }
-    }
 
-    private void ResetGame()
-    {
-        numberOfGuessesInCurrentGame = 0;
+        return numberOfGuesses;
     }
 
     private void DisplayStartMessage()
     {
         _ui.OutputString("New game:\n");
-        if (IsPractice) _ui.OutputString("For practice, number is: " + answer + "\n");
     }
 
-    private void HandleGuess(string guess)
+    private void DisplayGoalIfPractice(string answer)
     {
-        string result = _game.GetResultOfGuess(guess);
+        if (IsPractice)
+        {
+            _ui.OutputString("For practice, number is: " + answer + "\n");
+        }
+    }
+
+    private void HandleGuess(string guess, string answer)
+    {
+        string result = _game.GetResultOfGuess(guess, answer);
         _ui.OutputString(result + "\n");
-        numberOfGuessesInCurrentGame++;
     }
 
-    private void SaveScore()
+    private void SaveScore(string playerName, int score)
     {
-        _scoreDAO.PostScore(currentPlayer, numberOfGuessesInCurrentGame, _game.GetType().Name);
+        PlayerResult result = new PlayerResult(playerName, score, _game.GetName());
+        _scoreDAO.PostScore(result);
     }
 
     private void DisplayHighScores()
     {
-        List<Player> highScores = _scoreDAO.GetHighScores(_game.GetType().Name);
+        List<PlayerResult> highScores = _scoreDAO.GetHighScores(_game.GetName());
         _ui.OutputString("Player   games average");
 
-        foreach (Player player in highScores)
+        foreach (PlayerResult player in highScores)
         {
             _ui.OutputString(string.Format("{0,-9}{1,5:D}{2,9:F2}", player.Name, player.NumberOfGames, player.GetAverageScore()));
         }
     }
 
-    private void DisplayScoreForCurrentGame()
+    private void DisplayScoreForCurrentGame(int score)
     {
-        _ui.OutputString("Correct, it took " + numberOfGuessesInCurrentGame + " guesses");
+        _ui.OutputString("Correct, it took " + score + " guesses");
     }
 
     private bool QueryContinuePlaying()

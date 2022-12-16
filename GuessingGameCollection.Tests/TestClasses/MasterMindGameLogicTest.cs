@@ -1,14 +1,17 @@
 using GuessingGameCollection.Games;
+using GuessingGameCollection.Games.Components;
+using GuessingGameCollection.Tests.MockClasses;
 
 namespace GuessingGameCollection.Tests.TestClasses;
 
 [TestClass]
 public class MasterMindGameLogicTest
 {
-    private readonly MasterMind _masterMind;
+    private readonly GuessingGame _game;
     public MasterMindGameLogicTest()
     {
-        _masterMind = new MasterMind();
+        IGameStrategy mastermind = new MasterMindStrategy();
+        _game = new GuessingGame(mastermind);
     }
 
     [TestMethod]
@@ -23,14 +26,14 @@ public class MasterMindGameLogicTest
     [DataRow("1154", "abcd", ",")]
     public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
+        MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 
-        // _masterMind.Goal = goal;
+        _game.SetStrategy(strategy);
+        _game.GenerateGameGoal();
 
-        // _masterMind.GetResultOfGuess(guessInput);
+        string result = _game.GetResultOfGuess(guessInput, goal);
 
-        // string result = _masterMind.CurrentResult;
-
-        // Assert.AreEqual(expected, result);
+        Assert.AreEqual(expected, result);
     }
 
 }
