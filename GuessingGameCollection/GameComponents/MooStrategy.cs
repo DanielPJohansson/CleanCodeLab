@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GuessingGameCollection.GameComponents
 {
-    public class Moo : IGameStrategy
+    public class MooStrategy : IGameStrategy
     {
         public string GenerateRandomGoal()
         {
@@ -39,13 +39,6 @@ namespace GuessingGameCollection.GameComponents
             return digits;
         }
 
-        public string FormatResultForGameVariant(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
-        {
-            StringBuilder stringBuilder = new();
-            stringBuilder.Append('B', numberOfExactMatches);
-            stringBuilder.Append(',');
-            stringBuilder.Append('C', numberOfMatchesInWrongPosition);
-            return stringBuilder.ToString();
-        }
+
     }
 }

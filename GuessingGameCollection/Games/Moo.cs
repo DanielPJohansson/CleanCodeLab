@@ -18,16 +18,16 @@ public class Moo : IGame
         _gameStrategy = gameStrategy;
     }
 
-    public string GenerateGameGoal()
+    public string GetGameGoal()
     {
         goal = _gameStrategy.GenerateRandomGoal();
         return goal;
     }
 
-    public string EvaluateGuess(string guess)
+    public string GetResultOfGuess(string guess)
     {
-        int numberOfCorrectDigitWrongPosition = 0;
-        int numberOfCorrectDigitAndPosition = 0;
+        int numberOfMatchesInWrongPosition = 0;
+        int numberOfExactMatches = 0;
 
         for (int i = 0; i < goal.Length; i++)
         {
@@ -37,16 +37,25 @@ public class Moo : IGame
                 {
                     if (i == j)
                     {
-                        numberOfCorrectDigitAndPosition++;
+                        numberOfExactMatches++;
                     }
                     else
                     {
-                        numberOfCorrectDigitWrongPosition++;
+                        numberOfMatchesInWrongPosition++;
                     }
                 }
             }
         }
 
-        return _gameStrategy.FormatResultForGameVariant(numberOfCorrectDigitWrongPosition, numberOfCorrectDigitAndPosition);
+        return FormatResultForGameVariant(numberOfExactMatches, numberOfMatchesInWrongPosition);
+    }
+
+    public string FormatResultForGameVariant(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
+    {
+        StringBuilder stringBuilder = new();
+        stringBuilder.Append('B', numberOfExactMatches);
+        stringBuilder.Append(',');
+        stringBuilder.Append('C', numberOfMatchesInWrongPosition);
+        return stringBuilder.ToString();
     }
 }

@@ -10,9 +10,9 @@ public class GameController
     private readonly IGame _game;
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
-    private string currentPlayer = string.Empty;
+    private string currentPlayer;
     private int numberOfGuessesInCurrentGame = 0;
-    private string currentGameAnswer;
+    private string answer;
 
 
     public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
@@ -25,7 +25,6 @@ public class GameController
     public void Run()
     {
         GetPlayerName();
-        bool continuePlaying;
 
         do
         {
@@ -33,9 +32,8 @@ public class GameController
             SaveScore();
             DisplayHighScores();
             DisplayScoreForCurrentGame();
-            continuePlaying = QueryContinuePlaying();
         }
-        while (continuePlaying);
+        while (QueryContinuePlaying());
     }
 
     private void GetPlayerName()
@@ -47,7 +45,7 @@ public class GameController
     private void RunNewGame()
     {
         ResetGame();
-        string answer = _game.GenerateGameGoal();
+        answer = _game.GetGameGoal();
 
         DisplayStartMessage();
 
@@ -71,12 +69,12 @@ public class GameController
     private void DisplayStartMessage()
     {
         _ui.OutputString("New game:\n");
-        if (IsPractice) _ui.OutputString("For practice, number is: " + currentGameAnswer + "\n");
+        if (IsPractice) _ui.OutputString("For practice, number is: " + answer + "\n");
     }
 
     private void HandleGuess(string guess)
     {
-        string result = _game.EvaluateGuess(guess);
+        string result = _game.GetResultOfGuess(guess);
         _ui.OutputString(result + "\n");
         numberOfGuessesInCurrentGame++;
     }

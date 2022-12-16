@@ -6,13 +6,13 @@ public class MasterMind : IGame
 {
     private string goal;
 
-    public string EvaluateGuess(string guess)
+    public string GetResultOfGuess(string guess)
     {
         string lengthAdjustedGuess = EnsureGuessLengthMatchesGoalLength(guess);
-        bool[] digitIsMatched = new bool[lengthAdjustedGuess.Length];
+        bool[] matchedDigits = new bool[lengthAdjustedGuess.Length];
 
-        int numberOfExactMatches = GetExactMatches(lengthAdjustedGuess, digitIsMatched);
-        int numberOfMatchesInWrongPosition = GetMatchesInWrongPosition(lengthAdjustedGuess, digitIsMatched);
+        int numberOfExactMatches = GetExactMatches(lengthAdjustedGuess, matchedDigits);
+        int numberOfMatchesInWrongPosition = GetMatchesInWrongPosition(lengthAdjustedGuess, matchedDigits);
 
         return UpdateCurrentResult(numberOfExactMatches, numberOfMatchesInWrongPosition);
     }
@@ -79,7 +79,7 @@ public class MasterMind : IGame
         return stringBuilder.ToString();
     }
 
-    public string GenerateGameGoal()
+    public string GetGameGoal()
     {
         int maxValue = 5;
         int[] digits = GenerateFourRandomDigits(maxValue);

@@ -9,6 +9,5 @@ namespace GuessingGameCollection.GameComponents
     {
         public string GenerateRandomGoal();
 
-        public string FormatResultForGameVariant(int numberOfExactMatches, int numberOfMatchesInWrongPosition);
     }
 }

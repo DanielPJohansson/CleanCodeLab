@@ -1,4 +1,6 @@
+using GuessingGameCollection.GameComponents;
 using GuessingGameCollection.Games;
+using GuessingGameCollection.Tests.MockClasses;
 
 namespace GuessingGameCollection.Tests;
 
@@ -10,14 +12,14 @@ public class MooGameLogicTest
 
     public MooGameLogicTest()
     {
-        _game = new Moo();
+
+        _game = new Moo(new MooStrategy());
     }
 
     [TestMethod()]
     public void GenerateGameGoal_ReturnsOnlyDigits()
     {
-        _game.GenerateGameGoal();
-        string result = _game.Goal;
+        string result = _game.GetGameGoal();
 
         foreach (var character in result)
         {
@@ -28,8 +30,7 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsStringOfLengthFour()
     {
-        _game.GenerateGameGoal();
-        string result = _game.Goal;
+        string result = _game.GetGameGoal();
 
         Assert.AreEqual(result.Length, 4);
     }
@@ -46,11 +47,13 @@ public class MooGameLogicTest
     [DataRow("1234", "jhg", ",")]
     public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
-        _game.Goal = goal;
+        MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 
-        _game.EvaluateGuess(guessInput);
+        _game.SetGoalGenerator(strategy);
+        _game.GetGameGoal();
 
-        string result = _game.CurrentResult;
+        string result = _game.GetResultOfGuess(guessInput);
+
 
         Assert.AreEqual(expected, result);
     }
