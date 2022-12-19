@@ -6,26 +6,26 @@ namespace GuessingGameCollection.Controllers;
 public class GameController
 {
     public bool IsPractice { get; set; } = false;
-    private readonly IGame _game;
+    private IGame? _game;
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
+    private readonly IGamesManager _gamesManager;
 
-
-    public GameController(IUI ui, IGame game, IScoreDAO scoreDAO)
+    public GameController(IUI ui, IGamesManager gamesManager, IScoreDAO scoreDAO)
     {
+        _gamesManager = gamesManager;
         _ui = ui;
-        _game = game;
         _scoreDAO = scoreDAO;
     }
 
     public void Run()
     {
         string playerName = GetPlayerName();
-        SelectGame();
+        IGame selectedGame = OpenGameSelectMenu();
 
         do
         {
-            int score = PlayNewGame();
+            int score = PlayNewGame(selectedGame);
             SaveScore(playerName, score);
             DisplayHighScores();
             DisplayScoreForCurrentGame(score);
@@ -38,13 +38,39 @@ public class GameController
         _ui.OutputString("Enter your user name:\n");
         return _ui.GetStringInput();
     }
-    private void SelectGame()
+
+    private IGame OpenGameSelectMenu()
     {
-        throw new NotImplementedException();
+        _ui.OutputString("Select game to play:\n");
+        ListAvailableGames();
+        return SelectGame();
     }
 
-    private int PlayNewGame()
+    private void ListAvailableGames()
     {
+        List<string> games = _gamesManager.GetAvailableGames();
+        foreach (var game in games)
+        {
+            _ui.OutputString(game);
+        }
+    }
+
+    private IGame SelectGame()
+    {
+        int choice;
+        do
+        {
+            string input = _ui.GetStringInput().Trim();
+            choice = (int)char.GetNumericValue(input[0]);
+
+        } while (_gamesManager.IsValidIndex(choice) is false);
+
+        return _gamesManager.GetGame(choice);
+    }
+
+    private int PlayNewGame(IGame selectedGame)
+    {
+        _game = selectedGame;
         string goal = _game.GenerateGameGoal();
 
         DisplayStartMessage();
@@ -73,17 +99,17 @@ public class GameController
         _ui.OutputString("New game:\n");
     }
 
-    private void DisplayGoalIfPractice(string answer)
+    private void DisplayGoalIfPractice(string goal)
     {
         if (IsPractice)
         {
-            _ui.OutputString("For practice, number is: " + answer + "\n");
+            _ui.OutputString("For practice, number is: " + goal + "\n");
         }
     }
 
-    private void HandleGuess(string guess, string answer)
+    private void HandleGuess(string guess, string goal)
     {
-        string result = _game.GetResultOfGuess(guess, answer);
+        string result = _game.GetResultOfGuess(guess, goal);
         _ui.OutputString(result + "\n");
     }
 

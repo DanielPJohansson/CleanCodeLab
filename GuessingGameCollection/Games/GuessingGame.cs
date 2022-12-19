@@ -23,7 +23,7 @@ public class GuessingGame : IGame
 
     public string GetResultOfGuess(string guess, string goal)
     {
-        Matcher matcher = new Matcher(guess, goal);
+        StringMatcher matcher = new StringMatcher(guess, goal);
 
         int numberOfExactMatches = matcher.GetNumberOfExactMatches();
         int numberOfMatchesInWrongPosition = matcher.GetNumberOfMatchesInWrongPosition();

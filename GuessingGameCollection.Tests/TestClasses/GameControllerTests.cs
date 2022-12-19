@@ -10,13 +10,40 @@ namespace GuessingGameCollection.Tests;
 [TestClass]
 public class GameControllerTests
 {
+    List<string> inputs;
+    List<string> results;
+    List<string> expectedOutput;
 
     [TestMethod]
     public void GameControllerRun_GivesCorrectConsoleOutput()
     {
-        List<string> inputs = new() { "Daniel", "5678", "1256", "1243", "1234", "n" };
-        List<string> results = new() { ",", "BB,", "BB,CC", "BBBB," };
-        List<string> expectedOutput = new() {
+        CreateMockIO();
+
+        IGame mockGame = new MockGame()
+        {
+            Results = results
+        };
+        IGamesManager mockMenu = new MockMenuOptions(mockGame);
+        IUI mockUi = new MockUi()
+        {
+            MockUserInput = inputs,
+        };
+        IScoreDAO mockScoreDAO = new MockScoreDAO();
+
+        var controller = new GameController(mockUi, mockMenu, mockScoreDAO);
+
+        controller.Run();
+
+        List<string> output = (mockUi as MockUi)!.MockPrintToConsole;
+
+        CollectionAssert.AreEqual(expectedOutput, output);
+    }
+
+    private void CreateMockIO()
+    {
+        inputs = new() { "Daniel", "5678", "1256", "1243", "1234", "n" };
+        results = new() { ",", "BB,", "BB,CC", "BBBB," };
+        expectedOutput = new() {
             "Enter your user name:\n",
             "New game:\n",
             ",\n",
@@ -30,24 +57,5 @@ public class GameControllerTests
             "Daniel       1     4.00",
             "Correct, it took 4 guesses",
             "Continue?" };
-
-        IGame mockGame = new MockGame()
-        {
-            Results = results
-        };
-        IUI mockUi = new MockUi()
-        {
-            MockUserInput = inputs,
-        };
-        IScoreDAO mockScoreDAO = new MockScoreDAO();
-
-        var controller = new GameController(mockUi, mockGame, mockScoreDAO);
-
-        controller.Run();
-
-        List<string> output = (mockUi as MockUi)!.MockPrintToConsole;
-
-        CollectionAssert.AreEqual(expectedOutput, output);
     }
-
 }

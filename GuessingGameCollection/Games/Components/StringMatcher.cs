@@ -2,7 +2,7 @@ using GuessingGameCollection.Helpers;
 
 namespace GuessingGameCollection.Games.Components;
 
-public class Matcher
+public class StringMatcher
 {
     private readonly string _input;
     private readonly string _target;
@@ -10,7 +10,7 @@ public class Matcher
     private bool[] isMatchedInTarget;
     private int length;
 
-    public Matcher(string input, string target)
+    public StringMatcher(string input, string target)
     {
         _target = target;
         _input = input.SetToLengthOf(this._target);

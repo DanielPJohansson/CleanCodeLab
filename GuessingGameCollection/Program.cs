@@ -6,11 +6,16 @@ using GuessingGameCollection.Games.Components;
 using GuessingGameCollection.UI;
 
 IUI ui = new ConsoleIO();
-IGameStrategy gameStrategy = new MasterMindStrategy();
-IGame game = new GuessingGame(gameStrategy);
+List<IGame> availableGames = new List<IGame>()
+{
+    new GuessingGame(new MasterMindStrategy()),
+    new GuessingGame(new MooStrategy())
+};
+
+IGamesManager menu = new GameManager(availableGames);
 IScoreDAO scoreDAO = new ScoreDAO("result.txt");
 
-GameController gameController = new GameController(ui, game, scoreDAO);
+GameController gameController = new GameController(ui, menu, scoreDAO);
 
 if (args.Length > 0)
 {
@@ -21,10 +26,12 @@ if (args.Length > 0)
     else
     {
         Console.WriteLine($"Invalid argument: {args[0]}");
-
     }
 }
+else
+{
+    gameController.Run();
+}
 
-gameController.Run();
 
 
