@@ -21,7 +21,7 @@ public class MockMenuOptions : IGamesManager
         return _game;
     }
 
-    public bool IsValidIndex(int index)
+    public bool GameExists(int index)
     {
         throw new NotImplementedException();
     }

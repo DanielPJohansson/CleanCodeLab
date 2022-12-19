@@ -3,3 +3,7 @@ Daniel#&#4#&#Moo
 Daniel#&#1#&#MasterMind
 Daniel#&#1#&#MasterMind
 Daniel#&#2#&#MasterMind
+Daniel#&#1#&#MasterMind
+Daniel#&#2#&#Moo
+Daniel#&#6#&#MasterMind
+Daniel#&#6#&#Moo

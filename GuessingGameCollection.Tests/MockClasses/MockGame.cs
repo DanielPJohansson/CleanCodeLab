@@ -4,14 +4,13 @@ namespace GuessingGameCollection.Tests.MockClasses;
 
 public class MockGame : IGame
 {
-    public string Goal { get; set; } = string.Empty;
 
     public List<string> Results { get; set; } = new();
     public List<string> Guesses { get; set; } = new();
 
-    public bool GuessIsWrong { get; set; } = true;
+    public string? CurrentGoal { get; set; }
 
-    public string GetResultOfGuess(string guess, string goal)
+    public string EvaluateGuess(string guess)
     {
         Guesses.Add(guess);
         string result = Results.First();
@@ -19,13 +18,19 @@ public class MockGame : IGame
         return result;
     }
 
-    public string GenerateGameGoal()
+    public void GenerateNewGameGoal()
     {
-        return "1234";
+        CurrentGoal = "1234";
     }
 
     public string GetName()
     {
         throw new NotImplementedException();
     }
+
+    public bool IsWinCondition(string result)
+    {
+        throw new NotImplementedException();
+    }
+
 }

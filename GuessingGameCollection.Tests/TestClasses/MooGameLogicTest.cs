@@ -19,9 +19,11 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsOnlyDigits()
     {
-        string result = _game.GenerateGameGoal();
+        _game.GenerateNewGameGoal();
 
-        foreach (var character in result)
+        string goal = _game.CurrentGoal;
+
+        foreach (var character in goal)
         {
             Assert.IsTrue(char.IsDigit(character));
         }
@@ -30,9 +32,11 @@ public class MooGameLogicTest
     [TestMethod()]
     public void GenerateGameGoal_ReturnsStringOfLengthFour()
     {
-        string result = _game.GenerateGameGoal();
+        _game.GenerateNewGameGoal();
 
-        Assert.AreEqual(result.Length, 4);
+        string goal = _game.CurrentGoal;
+
+        Assert.AreEqual(goal.Length, 4);
     }
 
     [TestMethod()]
@@ -50,9 +54,9 @@ public class MooGameLogicTest
         MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 
         _game.SetStrategy(strategy);
-        _game.GenerateGameGoal();
+        _game.GenerateNewGameGoal();
 
-        string result = _game.GetResultOfGuess(guessInput, goal);
+        string result = _game.EvaluateGuess(guessInput);
 
 
         Assert.AreEqual(expected, result);

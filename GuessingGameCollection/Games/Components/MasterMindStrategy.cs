@@ -12,7 +12,7 @@ public class MasterMindStrategy : IGameStrategy
 
     private static int[] GenerateFourRandomDigitsBetweenZeroAndFive()
     {
-        int numberOfDigits = 8;
+        int numberOfDigits = 4;
         int maxValue = 6;
 
         int[] digits = new int[numberOfDigits];

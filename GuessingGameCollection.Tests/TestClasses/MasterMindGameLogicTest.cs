@@ -29,9 +29,9 @@ public class MasterMindGameLogicTest
         MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 
         _game.SetStrategy(strategy);
-        _game.GenerateGameGoal();
+        _game.GenerateNewGameGoal();
 
-        string result = _game.GetResultOfGuess(guessInput, goal);
+        string result = _game.EvaluateGuess(guessInput);
 
         Assert.AreEqual(expected, result);
     }

@@ -6,14 +6,15 @@ namespace GuessingGameCollection.Controllers;
 public class GameController
 {
     public bool IsPractice { get; set; } = false;
-    private IGame? _game;
     private readonly IUI _ui;
     private readonly IScoreDAO _scoreDAO;
-    private readonly IGamesManager _gamesManager;
+    private readonly IGamesManager _gameManager;
+    private IGame _game;
 
     public GameController(IUI ui, IGamesManager gamesManager, IScoreDAO scoreDAO)
     {
-        _gamesManager = gamesManager;
+        _gameManager = gamesManager;
+        _game = gamesManager.GetGame(0);
         _ui = ui;
         _scoreDAO = scoreDAO;
     }
@@ -21,16 +22,18 @@ public class GameController
     public void Run()
     {
         string playerName = GetPlayerName();
-        IGame selectedGame = OpenGameSelectMenu();
 
         do
         {
-            int score = PlayNewGame(selectedGame);
+            _game = SelectGameFromAvailable();
+            int score = PlayNewGame();
             SaveScore(playerName, score);
             DisplayHighScores();
-            DisplayScoreForCurrentGame(score);
+            DisplayScoreForCurrentGameRound(score);
         }
-        while (QueryContinuePlaying());
+        while (ContinuePlaying());
+
+        _ui.Exit();
     }
 
     private string GetPlayerName()
@@ -39,7 +42,7 @@ public class GameController
         return _ui.GetStringInput();
     }
 
-    private IGame OpenGameSelectMenu()
+    private IGame SelectGameFromAvailable()
     {
         _ui.OutputString("Select game to play:\n");
         ListAvailableGames();
@@ -48,7 +51,7 @@ public class GameController
 
     private void ListAvailableGames()
     {
-        List<string> games = _gamesManager.GetAvailableGames();
+        List<string> games = _gameManager.GetAvailableGames();
         foreach (var game in games)
         {
             _ui.OutputString(game);
@@ -63,35 +66,37 @@ public class GameController
             string input = _ui.GetStringInput().Trim();
             choice = (int)char.GetNumericValue(input[0]);
 
-        } while (_gamesManager.IsValidIndex(choice) is false);
+        } while (_gameManager.GameExists(choice) is false);
 
-        return _gamesManager.GetGame(choice);
+        return _gameManager.GetGame(choice);
     }
 
-    private int PlayNewGame(IGame selectedGame)
+    private int PlayNewGame()
     {
-        _game = selectedGame;
-        string goal = _game.GenerateGameGoal();
+        _game.GenerateNewGameGoal();
 
         DisplayStartMessage();
-        DisplayGoalIfPractice(goal);
+        DisplayIfPractice();
 
         int numberOfGuesses = 0;
+        string result;
 
-        string guess = _ui.GetStringInput();
-        HandleGuess(guess, goal);
-        numberOfGuesses++;
-
-        while (guess != goal)
+        do
         {
-            guess = _ui.GetStringInput();
-            _ui.OutputString(guess + "\n");
-
-            HandleGuess(guess, goal);
+            result = HandleGuess();
             numberOfGuesses++;
         }
+        while (_game.IsWinCondition(result) != true);
 
         return numberOfGuesses;
+    }
+
+    private string HandleGuess()
+    {
+        string guess = _ui.GetStringInput();
+        string result = _game.EvaluateGuess(guess);
+        _ui.OutputString(result + "\n");
+        return result;
     }
 
     private void DisplayStartMessage()
@@ -99,18 +104,12 @@ public class GameController
         _ui.OutputString("New game:\n");
     }
 
-    private void DisplayGoalIfPractice(string goal)
+    private void DisplayIfPractice()
     {
         if (IsPractice)
         {
-            _ui.OutputString("For practice, number is: " + goal + "\n");
+            _ui.OutputString("For practice, number is: " + _game.CurrentGoal + "\n");
         }
-    }
-
-    private void HandleGuess(string guess, string goal)
-    {
-        string result = _game.GetResultOfGuess(guess, goal);
-        _ui.OutputString(result + "\n");
     }
 
     private void SaveScore(string playerName, int score)
@@ -130,12 +129,12 @@ public class GameController
         }
     }
 
-    private void DisplayScoreForCurrentGame(int score)
+    private void DisplayScoreForCurrentGameRound(int score)
     {
         _ui.OutputString("Correct, it took " + score + " guesses");
     }
 
-    private bool QueryContinuePlaying()
+    private bool ContinuePlaying()
     {
         _ui.OutputString("Continue?");
         string answer = _ui.GetStringInput();

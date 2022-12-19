@@ -27,10 +27,17 @@ public class GameManager : IGamesManager
 
     public IGame GetGame(int index)
     {
-        return _games[index];
+        if (true)
+        {
+            return _games[index];
+        }
+        else
+        {
+            throw new ArgumentOutOfRangeException();
+        }
     }
 
-    public bool IsValidIndex(int index)
+    public bool GameExists(int index)
     {
         return (index >= 0 && index < _games.Count()) ? true : false;
     }

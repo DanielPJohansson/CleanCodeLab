@@ -7,5 +7,6 @@ public interface IGamesManager
 
     public IGame GetGame(int index);
 
-    public bool IsValidIndex(int index);
+    public bool GameExists(int index);
+
 }

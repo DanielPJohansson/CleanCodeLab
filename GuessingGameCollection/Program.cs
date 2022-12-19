@@ -12,10 +12,10 @@ List<IGame> availableGames = new List<IGame>()
     new GuessingGame(new MooStrategy())
 };
 
-IGamesManager menu = new GameManager(availableGames);
+IGamesManager gamesManager = new GameManager(availableGames);
 IScoreDAO scoreDAO = new ScoreDAO("result.txt");
 
-GameController gameController = new GameController(ui, menu, scoreDAO);
+GameController gameController = new GameController(ui, gamesManager, scoreDAO);
 
 if (args.Length > 0)
 {
@@ -25,13 +25,11 @@ if (args.Length > 0)
     }
     else
     {
-        Console.WriteLine($"Invalid argument: {args[0]}");
+        Console.WriteLine($"Unknown argument: {args[0]}. Running as default.");
     }
 }
-else
-{
-    gameController.Run();
-}
+
+gameController.Run();
 
 
 

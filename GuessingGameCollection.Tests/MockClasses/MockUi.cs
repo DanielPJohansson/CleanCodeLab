@@ -8,6 +8,11 @@ public class MockUi : IUI
     public List<string> MockUserInput { get; set; } = new();
     public List<string> MockPrintToConsole { get; set; } = new();
 
+    public void Exit()
+    {
+        System.Environment.Exit(0);
+    }
+
     public string GetStringInput()
     {
         var stringToReturn = MockUserInput[userInputIndex];

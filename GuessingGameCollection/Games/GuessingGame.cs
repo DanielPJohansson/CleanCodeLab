@@ -4,11 +4,13 @@ using GuessingGameCollection.Games.Components;
 namespace GuessingGameCollection.Games;
 public class GuessingGame : IGame
 {
+    public string CurrentGoal { get; private set; } = string.Empty;
     private IGameStrategy _gameStrategy;
 
     public GuessingGame(IGameStrategy gameStrategy)
     {
         _gameStrategy = gameStrategy;
+        GenerateNewGameGoal();
     }
 
     public void SetStrategy(IGameStrategy gameStrategy)
@@ -16,14 +18,14 @@ public class GuessingGame : IGame
         _gameStrategy = gameStrategy;
     }
 
-    public string GenerateGameGoal()
+    public void GenerateNewGameGoal()
     {
-        return _gameStrategy.GenerateRandomGoal();
+        CurrentGoal = _gameStrategy.GenerateRandomGoal();
     }
 
-    public string GetResultOfGuess(string guess, string goal)
+    public string EvaluateGuess(string guess)
     {
-        StringMatcher matcher = new StringMatcher(guess, goal);
+        StringMatcher matcher = new StringMatcher(guess, CurrentGoal);
 
         int numberOfExactMatches = matcher.GetNumberOfExactMatches();
         int numberOfMatchesInWrongPosition = matcher.GetNumberOfMatchesInWrongPosition();
@@ -38,6 +40,12 @@ public class GuessingGame : IGame
         stringBuilder.Append(',');
         stringBuilder.Append('C', numberOfMatchesInWrongPosition);
         return stringBuilder.ToString();
+    }
+
+    public bool IsWinCondition(string result)
+    {
+        string winResult = FormatResult(CurrentGoal.Length, 0);
+        return result == winResult;
     }
 
     public string GetName()
