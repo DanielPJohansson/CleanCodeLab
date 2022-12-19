@@ -64,7 +64,7 @@ public class GameController
         do
         {
             string input = _ui.GetStringInput().Trim();
-            choice = (int)char.GetNumericValue(input[0]);
+            choice = (int)char.GetNumericValue(input.First());
 
         } while (_gameManager.GameExists(choice) is false);
 
