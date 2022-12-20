@@ -32,8 +32,6 @@ public class GameController
             DisplayScoreForCurrentGameRound(score);
         }
         while (ContinuePlaying());
-
-        _ui.Exit();
     }
 
     private string GetPlayerName()

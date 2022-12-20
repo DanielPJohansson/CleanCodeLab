@@ -13,7 +13,7 @@ public class MockMenuOptions : IGamesManager
 
     public List<string> GetAvailableGames()
     {
-        return new List<string>() { "1. MockGame" };
+        return new List<string>() { "0. Moo" };
     }
 
     public IGame GetGame(int index)
@@ -23,6 +23,6 @@ public class MockMenuOptions : IGamesManager
 
     public bool GameExists(int index)
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

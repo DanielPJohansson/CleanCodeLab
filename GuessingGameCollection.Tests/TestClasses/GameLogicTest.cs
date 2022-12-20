@@ -5,20 +5,20 @@ using GuessingGameCollection.Tests.MockClasses;
 namespace GuessingGameCollection.Tests;
 
 [TestClass()]
-public class MooGameLogicTest
+public class GameLogicTests
 {
     private readonly GuessingGame _game;
 
 
-    public MooGameLogicTest()
+    public GameLogicTests()
     {
-
         _game = new GuessingGame(new MooStrategy());
     }
 
     [TestMethod()]
-    public void GenerateGameGoal_ReturnsOnlyDigits()
+    public void GenerateGameGoal_Moo_ReturnsOnlyDigits()
     {
+        _game.SetStrategy(new MooStrategy());
         _game.GenerateNewGameGoal();
 
         string goal = _game.CurrentGoal;
@@ -30,8 +30,9 @@ public class MooGameLogicTest
     }
 
     [TestMethod()]
-    public void GenerateGameGoal_ReturnsStringOfLengthFour()
+    public void GenerateGameGoal_Moo_ReturnsStringOfLengthFour()
     {
+        _game.SetStrategy(new MooStrategy());
         _game.GenerateNewGameGoal();
 
         string goal = _game.CurrentGoal;
@@ -49,7 +50,7 @@ public class MooGameLogicTest
     [DataRow("1234", "", ",")]
     [DataRow("1234", "987512", ",")]
     [DataRow("1234", "jhg", ",")]
-    public void GetResultOfGuess_ReturnsCorrectResult(string goal, string guessInput, string expected)
+    public void GetResultOfGuess_Moo_ReturnsCorrectResult(string goal, string guessInput, string expected)
     {
         MockGoalGenerator strategy = new MockGoalGenerator() { Goal = goal };
 

@@ -8,10 +8,6 @@ public class MockGoalGenerator : IGameStrategy
 
     public string Name { get; set; }
 
-    public string FormatResultForGameVariant(int numberOfExactMatches, int numberOfMatchesInWrongPosition)
-    {
-        throw new NotImplementedException();
-    }
 
     public string GenerateRandomGoal()
     {

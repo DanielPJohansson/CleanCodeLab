@@ -19,11 +19,9 @@ public class GameControllerTests
     {
         CreateMockIO();
 
-        IGame mockGame = new MockGame()
-        {
-            Results = results
-        };
-        IGamesManager mockMenu = new MockMenuOptions(mockGame);
+        IGame game = new GuessingGame(new MockGoalGenerator() { Goal = "1234" });
+
+        IGamesManager mockMenu = new MockMenuOptions(game);
         IUI mockUi = new MockUi()
         {
             MockUserInput = inputs,
@@ -41,17 +39,15 @@ public class GameControllerTests
 
     private void CreateMockIO()
     {
-        inputs = new() { "Daniel", "5678", "1256", "1243", "1234", "n" };
-        results = new() { ",", "BB,", "BB,CC", "BBBB," };
+        inputs = new() { "Daniel", "1", "5678", "1256", "1243", "1234", "n" };
         expectedOutput = new() {
             "Enter your user name:\n",
+            "Select game to play:\n",
+            "0. Moo",
             "New game:\n",
             ",\n",
-            "1256\n",
             "BB,\n",
-            "1243\n",
             "BB,CC\n",
-            "1234\n",
             "BBBB,\n",
             "Player   games average",
             "Daniel       1     4.00",
